@@ -15,10 +15,10 @@ namespace RicochetRobots
         private static bool hasLoadedBoards = false;
         public static Dictionary<RGBY, List<Board>> subBoards = new Dictionary<RGBY, List<Board>>()
         {
-            { RGBY.Red, new List<Board>() },
-            { RGBY.Green, new List<Board>() },
-            { RGBY.Blue, new List<Board>() },
-            { RGBY.Yellow, new List<Board>() }
+            { RGBY.red, new List<Board>() },
+            { RGBY.green, new List<Board>() },
+            { RGBY.blue, new List<Board>() },
+            { RGBY.yellow, new List<Board>() }
         };
 
         public List<Wall> walls = new List<Wall>();
@@ -73,11 +73,11 @@ namespace RicochetRobots
             Console.WriteLine("loading boards...");
             // boardData = ReadFromFile..,
 
-            RGBY currentHeader = RGBY.Red;
+            RGBY currentHeader = RGBY.red;
             Board currentSubBoard = new Board();
 
 
-            using (var reader = new StringReader(boardData))
+            using (var reader = new StreamReader("Boards.txt"))
             {
                 Console.WriteLine("start");
 
@@ -95,6 +95,7 @@ namespace RicochetRobots
                         currentSubBoard = new Board();
                         continue;
                     }
+
                     string[] values = line.Split(",");
 
                     for (int i = 0; i < values.Length; i++)
@@ -102,62 +103,19 @@ namespace RicochetRobots
                     Console.WriteLine();
 
                     Wall w = new Wall(int.Parse(values[0]), int.Parse(values[1]));
-                    if (values[2] != null)
-                        w.rotation = (Rotation)Enum.Parse(typeof(Rotation), values[2]);
+                    w.rotation = (Rotation)Enum.Parse(typeof(Rotation), values[2]);
+                    if (values[3] != "none")
+                    {
+                        w.item = (Item)Enum.Parse(typeof(Item), values[3]);
+                        w.itemColor = (RGBY)Enum.Parse(typeof(RGBY), values[4]);
+                    }
+
                     currentSubBoard.walls.Add(w);
-
-
                 }
                 Console.WriteLine("done");
             }
         }
-
-        // scuffed solution
-        private static string boardData =
-        $@"[Red]
-2,0,UL
-1,6,UR
-3,5,DL
-5,2,DL
-2,7,UR
-7,3,UR
-0,0,UR
-end
-[Green]
-1,4,UL
-4,1,DL
-6,3,UR
-5,6,DR
-1,7,UR
-7,5,UR
-0,0,UR
-end
-[Blue]
-5,1,UL
-2,3,DR
-1,6,DL
-6,5,UR
-3,7,UR
-7,3,UR
-0,0,UR
-end
-[Yellow]
-0,5,DL
-1,2,DR
-3,1,UR
-4,6,UL
-6,5,DL
-2,7,UR
-7,2,UR
-0,0,UR
-end";
     }
 
-    public enum Rotation
-    {
-        UL = 0,
-        DL = 1,
-        DR = 2,
-        UR = 3
-    }
+
 }

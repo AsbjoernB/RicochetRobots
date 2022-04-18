@@ -8,9 +8,9 @@ namespace RicochetRobots
 {
     public enum RGBY
     {
-        Red,
-        Green,
-        Blue,
-        Yellow
+        red,
+        green,
+        blue,
+        yellow
     }
 }

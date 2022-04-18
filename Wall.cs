@@ -7,19 +7,21 @@ namespace RicochetRobots
     public class Wall
     {
 
-        public Wall(Vector2 position, Rotation rotation = Rotation.UR)
+        public Vector2 position;
+        public Rotation rotation;
+        public Item item;
+        public RGBY itemColor;
+
+        public Wall(Vector2 position, Rotation rotation = Rotation.UR, Item item = Item.none, RGBY itemColor = RGBY.red)
         {
             this.position = position;
             this.rotation = rotation;
+            this.item = item;
+            this.itemColor = itemColor;
         }
-        public Wall(int x, int y, Rotation rotation = Rotation.UR)
-        {
-            this.position = new Vector2(x, y);
-            this.rotation = rotation;
-        }
+        public Wall(int x, int y, Rotation rotation = Rotation.UR, Item item = Item.none, RGBY itemColor = RGBY.red) : this(new Vector2(x, y), rotation, item, itemColor) {}
 
-        public Vector2 position;
-        public Rotation rotation;
+        
 
         public Vector2 wallDir
         {
@@ -42,5 +44,22 @@ namespace RicochetRobots
         }
 
         public Wall Clone() => (Wall)MemberwiseClone();
+    }
+
+    public enum Rotation
+    {
+        UL = 0,
+        DL = 1,
+        DR = 2,
+        UR = 3
+    }
+
+    public enum Item
+    {
+        none,
+        star,
+        sun,
+        planet,
+        moon
     }
 }

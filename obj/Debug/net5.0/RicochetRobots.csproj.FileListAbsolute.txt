@@ -47,3 +47,9 @@ D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Boards.txt
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\robot.png
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\tile.png
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\wall.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\moon.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\planet.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\star.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\sun.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\vortex.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\robot2.png

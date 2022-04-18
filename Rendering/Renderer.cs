@@ -10,7 +10,7 @@ namespace RicochetRobots
     public static class Renderer
     {
 
-        private static GL gl;
+        public static GL gl { get; private set; }
 
         private static BufferObject<float> Vbo;
         private static BufferObject<uint> Ebo;
@@ -56,7 +56,6 @@ namespace RicochetRobots
             Program.window.Load += OnLoad;
             Program.window.Render += OnRender;
             Program.window.Closing += OnClose;
-
         }
 
         private static void OnLoad()
@@ -93,6 +92,8 @@ namespace RicochetRobots
             gl.Enable(EnableCap.Blend);
             gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
+            TextureBank.Init(gl);
+
         }
 
         private static unsafe void OnRender(double obj)
@@ -106,44 +107,16 @@ namespace RicochetRobots
             Gameplay.Draw();
         }
 
-        public static unsafe void DrawBoard(Board board)
+        public static unsafe void DrawTexture(Texture texture, Vector2 position, float rotation = 0f, float scale = 1f, float hueShift = 0)
         {
+            texture.Bind();
 
-            TileTex.Bind();
-            for (int x = 0; x < tilecount; x++)
-            {
-                for (int y = 0; y < tilecount; y++)
-                {
-                    //Using the transformations.
-                    Shader.SetUniform("uModel", new Transform(new Vector3(x, y, 0)).ViewMatrix);
-                    Shader.SetUniform("uCamera", camera.projectionMatrix);
+            Shader.SetUniform("uModel", new Transform(new Vector3(position.X, position.Y, 0), rotation, scale).ViewMatrix);
+            Shader.SetUniform("uCamera", camera.projectionMatrix);
+            Shader.SetUniform("uHue", hueShift);
 
-                    gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
-                }
-            }
 
-            WallTex.Bind();
-            foreach (Wall wall in board.walls)
-            {
-                //Using the transformations.
-                Shader.SetUniform("uModel", new Transform(new Vector3(wall.position.X, wall.position.Y, 0), (int)wall.rotation * 90, 2f).ViewMatrix);
-                Shader.SetUniform("uCamera", camera.projectionMatrix);
-
-                gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
-            }
-        }
-
-        public static unsafe void DrawRobots(Vector2[] positions)
-        {
-            RobotTex.Bind();
-            for (int i = 0; i < 4; i++)
-            {
-                //Using the transformations.
-                Shader.SetUniform("uModel", new Transform(new Vector3(positions[i], 0)).ViewMatrix);
-                Shader.SetUniform("uCamera", camera.projectionMatrix);
-
-                gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
-            }
+            gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
         }
 
 
@@ -169,6 +142,21 @@ namespace RicochetRobots
             }
         }
 
-
+        public static float hueShift(RGBY target)
+        {
+            switch (target)
+            {
+                case RGBY.red:
+                    return 0;
+                case RGBY.green:
+                    return xMath.DegreesToRadians(125);
+                case RGBY.blue:
+                    return xMath.DegreesToRadians(230);
+                case RGBY.yellow:
+                    return xMath.DegreesToRadians(55);
+                default:
+                    return 0;
+            }
+        }
     }
 }

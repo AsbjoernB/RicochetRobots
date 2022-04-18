@@ -91,8 +91,27 @@ namespace RicochetRobots
 
         public static void Draw()
         {
-            Renderer.DrawBoard(board);
-            Renderer.DrawRobots(RobotPositions);
+            DrawBoard();
+
+            for (int i = 0; i < 4; i++)
+            {
+                Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], hueShift: Renderer.hueShift((RGBY)i));
+            }
+        }
+        public static void DrawBoard()
+        {
+            for (int x = 0; x < tilecount; x++)
+            {
+                for (int y = 0; y < tilecount; y++)
+                {
+                    Renderer.DrawTexture(TextureBank.Textures["tile"], new Vector2(x, y));
+                }
+            }
+
+            foreach (Wall wall in board.walls)
+            {
+                Renderer.DrawTexture(TextureBank.Textures["wall"], wall.position, (int)wall.rotation * 90, 2f, 0);
+            }
         }
 
         private static void KeyDown(IKeyboard arg1, Key arg2, int arg3)
