@@ -43,6 +43,7 @@ namespace RicochetRobots
                 // pick random board from each color and add to array
                 int index = r.Next(subBoards[(RGBY)i].Count);
                 sb.Add(subBoards[(RGBY)i][index]);
+                Console.WriteLine((RGBY)i);
             }
 
             var shuffled = sb.OrderBy(b => r.Next()).ToList();

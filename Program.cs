@@ -17,6 +17,8 @@ namespace RicochetRobots
             Gameplay.Init();
 
             window.Run();
+            Console.Write("hvis du ser det her og vinduet stadig ikke er åbnet har jeg ingen ide");
+            Console.ReadLine();
         }
     }
 }

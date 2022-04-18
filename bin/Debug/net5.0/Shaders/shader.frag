@@ -36,8 +36,23 @@ vec4 hueShift( vec4 color, float hueAdjust )
 
 }
 
+vec4 HueShift (in vec4 c, in float Shift)
+{
+    vec3 Color = vec3(c);
+
+    vec3 P = vec3(0.55735)*dot(vec3(0.55735),Color);
+    
+    vec3 U = Color-P;
+    
+    vec3 V = cross(vec3(0.55735),U);    
+
+    Color = U*cos(Shift*6.2832) + V*sin(Shift*6.2832) + P;
+    
+    return vec4(Color,c.a);
+}
+
 void main()
 {
     //Here we sample the texture based on the Uv coordinates of the fragment
-    FragColor = hueShift(texture(uTexture0, fUv),uHue);
+    FragColor = HueShift(texture(uTexture0, fUv),uHue);
 }

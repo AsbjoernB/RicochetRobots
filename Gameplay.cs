@@ -61,7 +61,6 @@ namespace RicochetRobots
 
                 for (int r = 0; r < RobotPositions.Length; r++)
                 {
-                    Console.WriteLine(nextpos + ", " + RobotPositions[r]);
                     if (RobotPositions[r].Equals(nextpos))
                         br = true;
                     
@@ -88,11 +87,12 @@ namespace RicochetRobots
             RobotPositions[selectedRobot] = pos;
             
         }
-
+        static int h = 0;
         public static void Draw()
         {
             DrawBoard();
-
+            h++;
+            h = xMath.Wrap(h, 0, 360);
             for (int i = 0; i < 4; i++)
             {
                 Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], hueShift: Renderer.hueShift((RGBY)i));
@@ -111,6 +111,8 @@ namespace RicochetRobots
             foreach (Wall wall in board.walls)
             {
                 Renderer.DrawTexture(TextureBank.Textures["wall"], wall.position, (int)wall.rotation * 90, 2f, 0);
+                if (wall.item != Item.none)
+                    Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(Item), wall.item)], wall.position, hueShift: Renderer.hueShift(wall.itemColor));
             }
         }
 

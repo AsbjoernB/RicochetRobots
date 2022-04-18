@@ -149,11 +149,11 @@ namespace RicochetRobots
                 case RGBY.red:
                     return 0;
                 case RGBY.green:
-                    return xMath.DegreesToRadians(125);
+                    return 125f/360f;
                 case RGBY.blue:
-                    return xMath.DegreesToRadians(230);
+                    return 230f/360f;
                 case RGBY.yellow:
-                    return xMath.DegreesToRadians(55);
+                    return 57f/360f;
                 default:
                     return 0;
             }

@@ -60,6 +60,7 @@ namespace RicochetRobots
         star,
         sun,
         planet,
-        moon
+        moon,
+        vortex
     }
 }

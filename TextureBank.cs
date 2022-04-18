@@ -22,6 +22,7 @@ namespace RicochetRobots
             Textures.Add("sun", new Texture(gl, "Sprites/sun.png"));
             Textures.Add("planet", new Texture(gl, "Sprites/planet.png"));
             Textures.Add("moon", new Texture(gl, "Sprites/moon.png"));
+            Textures.Add("vortex", new Texture(gl, "Sprites/vortex.png"));
         }
 
     }
