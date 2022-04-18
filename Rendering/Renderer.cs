@@ -9,7 +9,7 @@ namespace RicochetRobots
 {
     public static class Renderer
     {
-        private static IWindow window;
+
         private static GL gl;
 
         private static BufferObject<float> Vbo;
@@ -51,24 +51,23 @@ namespace RicochetRobots
             var options = WindowOptions.Default;
             options.Size = new Vector2D<int>((int)((tilecount + sidebarwidth) * tilepixels), (int)(tilecount * tilepixels));
             options.Title = "Ricochet Robots";
-            window = Window.Create(options);
+            Program.window = Window.Create(options);
 
-            window.Load += OnLoad;
-            window.Render += OnRender;
-            window.Closing += OnClose;
+            Program.window.Load += OnLoad;
+            Program.window.Render += OnRender;
+            Program.window.Closing += OnClose;
 
-            window.Run();
         }
 
         private static void OnLoad()
         {
-            IInputContext input = window.CreateInput();
+            IInputContext input = Program.window.CreateInput();
             for (int i = 0; i < input.Keyboards.Count; i++)
             {
                 input.Keyboards[i].KeyDown += KeyDown;
             }
 
-            gl = GL.GetApi(window);
+            gl = GL.GetApi(Program.window);
 
             Ebo = new BufferObject<uint>(gl, Indices, BufferTargetARB.ElementArrayBuffer);
             Vbo = new BufferObject<float>(gl, Vertices, BufferTargetARB.ArrayBuffer);
@@ -79,9 +78,9 @@ namespace RicochetRobots
 
             Shader = new Shader(gl, "Shaders/shader.vert", "Shaders/shader.frag");
 
-            TileTex = new Texture(gl, "tile.png");
-            WallTex = new Texture(gl, "wall.png");
-            RobotTex = new Texture(gl, "robot.png");
+            TileTex = new Texture(gl, "Sprites/tile.png");
+            WallTex = new Texture(gl, "Sprites/wall.png");
+            RobotTex = new Texture(gl, "Sprites/robot.png");
 
 
             camera = new Camera(new Vector2((tilecount + sidebarwidth) / 2f - 0.5f, tilecount / 2f - 0.5f), new Vector2(tilecount + sidebarwidth, tilecount));
@@ -107,7 +106,7 @@ namespace RicochetRobots
             Gameplay.Draw();
         }
 
-        private static unsafe void DrawBoard(Board board)
+        public static unsafe void DrawBoard(Board board)
         {
 
             TileTex.Bind();
@@ -134,7 +133,7 @@ namespace RicochetRobots
             }
         }
 
-        private static unsafe void DrawRobots(Vector2[] positions)
+        public static unsafe void DrawRobots(Vector2[] positions)
         {
             RobotTex.Bind();
             for (int i = 0; i < 4; i++)
@@ -162,7 +161,7 @@ namespace RicochetRobots
         {
             if (arg2 == Key.Escape)
             {
-                window.Close();
+                Program.window.Close();
             }
             if (arg2 == Key.A)
             {

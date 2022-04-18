@@ -19,7 +19,7 @@ namespace RicochetRobots
         public float Rotation { get; set; } = 0f;
 
         //Note: The order here does matter.
-        public Matrix4x4 ViewMatrix => Matrix4x4.Identity * Matrix4x4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation)) * Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateTranslation(Position);
+        public Matrix4x4 ViewMatrix => Matrix4x4.Identity * Matrix4x4.CreateRotationZ(xMath.DegreesToRadians(Rotation)) * Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateTranslation(Position);
 
 
         public Transform() { }

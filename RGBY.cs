@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RicochetRobots
 {
-    public enum Colors
+    public enum RGBY
     {
         Red,
         Green,

@@ -7,11 +7,16 @@ using System.Numerics;
 
 namespace RicochetRobots
 {
-    class Program
+    public class Program
     {
+        public static IWindow window;
+
         private static void Main(string[] args)
         {
             Renderer.Init();
+            Gameplay.Init();
+
+            window.Run();
         }
     }
 }

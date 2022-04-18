@@ -42,8 +42,8 @@ D:\Documents\Code\C#\RicochetRobots\obj\Debug\net5.0\RicochetRobots.pdb
 D:\Documents\Code\C#\RicochetRobots\obj\Debug\net5.0\RicochetRobots.genruntimeconfig.cache
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Shaders\shader.frag
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Shaders\shader.vert
-D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\silk.png
 D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\SixLabors.ImageSharp.dll
-D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\tile.png
-D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\wall.png
-D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\robot.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Boards.txt
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\robot.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\tile.png
+D:\Documents\Code\C#\RicochetRobots\bin\Debug\net5.0\Sprites\wall.png
