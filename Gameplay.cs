@@ -91,8 +91,6 @@ namespace RicochetRobots
 
             Vector2 toPos = fromPos + dir;
 
-            Console.WriteLine(toPos);
-
             if (toPos.X < 0 || toPos.X > tilecount - 1 || toPos.Y < 0 || toPos.Y > tilecount - 1)
                 return false;
 
@@ -148,28 +146,30 @@ namespace RicochetRobots
             if (itemIndex < itemorder.Count())
                 Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), itemorder[itemIndex].itemType)], new Vector2(tilecount / 2 - 0.5f), scale:2, hueShift: Renderer.hueShift(itemorder[itemIndex].color));
         }
+
+        float highlightAlpha = .15f;
         protected virtual void DrawSelectionHighlight()
         {
-            Renderer.DrawTexture(TextureBank.Textures["colrect"], RobotPositions[selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+            Renderer.DrawTexture(TextureBank.Textures["colrect"], RobotPositions[selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             Vector2 fromPos = RobotPositions[selectedRobot];
             
             // copied 4 times, but how to loop (0;-1),(0;1),(-1;0),(1;0)
             while (CanMakeMove(fromPos, -Vector2.UnitX))
             {
                 fromPos += -Vector2.UnitX;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, Vector2.UnitX))
             {
                 fromPos += Vector2.UnitX;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, -Vector2.UnitY))
             {
                 fromPos += -Vector2.UnitY;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, Vector2.UnitY))
