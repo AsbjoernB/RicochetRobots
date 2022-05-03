@@ -10,16 +10,14 @@ namespace RicochetRobots
         public Vector2 position;
         public Rotation rotation;
         public Item item;
-        public RGBY itemColor;
 
-        public Wall(Vector2 position, Rotation rotation = Rotation.UR, Item item = Item.none, RGBY itemColor = RGBY.red)
+        public Wall(Vector2 position, Rotation rotation = Rotation.UR, ItemType itemType = ItemType.none, RGBY itemColor = RGBY.red)
         {
             this.position = position;
             this.rotation = rotation;
-            this.item = item;
-            this.itemColor = itemColor;
+            this.item = new Item(itemType, itemColor);
         }
-        public Wall(int x, int y, Rotation rotation = Rotation.UR, Item item = Item.none, RGBY itemColor = RGBY.red) : this(new Vector2(x, y), rotation, item, itemColor) {}
+        public Wall(int x, int y, Rotation rotation = Rotation.UR, ItemType item = ItemType.none, RGBY itemColor = RGBY.red) : this(new Vector2(x, y), rotation, item, itemColor) {}
 
         
 
@@ -52,15 +50,5 @@ namespace RicochetRobots
         DL = 1,
         DR = 2,
         UR = 3
-    }
-
-    public enum Item
-    {
-        none,
-        star,
-        sun,
-        planet,
-        moon,
-        vortex
     }
 }

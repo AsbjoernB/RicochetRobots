@@ -15,7 +15,7 @@ namespace RicochetRobots
         {
             Textures.Add("tile", new Texture(gl, "Sprites/tile.png"));
             Textures.Add("wall", new Texture(gl, "Sprites/wall.png"));
-            Textures.Add("robot", new Texture(gl, "Sprites/robot2.png"));
+            Textures.Add("robot", new Texture(gl, "Sprites/robot.png"));
 
             // items
             Textures.Add("star", new Texture(gl, "Sprites/star.png"));
@@ -23,6 +23,11 @@ namespace RicochetRobots
             Textures.Add("planet", new Texture(gl, "Sprites/planet.png"));
             Textures.Add("moon", new Texture(gl, "Sprites/moon.png"));
             Textures.Add("vortex", new Texture(gl, "Sprites/vortex.png"));
+
+
+            // other
+            Textures.Add("rect", new Texture(gl, "Sprites/rect.png"));
+            Textures.Add("colrect", new Texture(gl, "Sprites/colrect.png"));
         }
 
     }

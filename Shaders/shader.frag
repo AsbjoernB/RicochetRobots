@@ -4,6 +4,7 @@ in vec2 fUv;
 //A uniform of the type sampler2D will have the storage value of our texture.
 uniform sampler2D uTexture0;
 uniform float uHue;
+uniform float uAlpha;
 
 out vec4 FragColor;
 
@@ -54,5 +55,6 @@ vec4 HueShift (in vec4 c, in float Shift)
 void main()
 {
     //Here we sample the texture based on the Uv coordinates of the fragment
-    FragColor = HueShift(texture(uTexture0, fUv),uHue);
+    vec4 col = HueShift(texture(uTexture0, fUv),uHue);
+    FragColor = vec4(col.r, col.g, col.b, col.a * uAlpha);
 }

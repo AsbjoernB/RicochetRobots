@@ -7,14 +7,20 @@ using System.Numerics;
 
 namespace RicochetRobots
 {
-    public class Program
+    public class Master
     {
         public static IWindow window;
+        public static Gameplay gameplay;
 
+        public static readonly float tilecount = 16;
+        public static readonly float sidebarwidth = 8;
+        public static readonly float tilepixels = 55;
+
+        // entry point
         private static void Main(string[] args)
         {
             Renderer.Init();
-            Gameplay.Init();
+            gameplay = new SpeedrunGameplay();
 
             window.Run();
             Console.Write("hvis du ser det her og vinduet stadig ikke er åbnet har jeg ingen ide");

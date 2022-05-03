@@ -6,27 +6,39 @@ using System.Threading.Tasks;
 using System.Numerics;
 using Silk.NET.Vulkan;
 using Silk.NET.Input;
+using System.Diagnostics;
 
 namespace RicochetRobots
 {
-    public static class Gameplay
+    public class Gameplay
     {
-        private static Vector2[] RobotPositions = new Vector2[4];
+        protected Vector2[] RobotPositions = new Vector2[4];
 
         // rgby
-        private static int selectedRobot = 0;
-        
-        // exists twice
-        private static float tilecount = 16;
+        protected int selectedRobot = 0;
 
-        public static void Init()
+        protected List<Item> itemorder;
+
+        protected int itemIndex = 0;
+
+
+        protected float tilecount => Master.tilecount;
+
+        protected IInputContext input;
+
+        protected Board board;
+
+
+
+        protected Gameplay()
         {
-            Program.window.Load += OnLoad;
+            Master.window.Load += OnLoad;
+            Master.window.Render += Draw;
         }
 
-        public static void OnLoad()
+        protected virtual void OnLoad()
         {
-            IInputContext input = Program.window.CreateInput();
+            input = Master.window.CreateInput();
             for (int i = 0; i < input.Keyboards.Count; i++)
             {
                 input.Keyboards[i].KeyDown += KeyDown;
@@ -34,71 +46,89 @@ namespace RicochetRobots
             StartGame();
         }
 
-        public static void StartGame()
+        protected virtual void StartGame()
         {
+            selectedRobot = 0;
+            itemIndex = 0;
             Random r = new Random();
             board = Board.GenerateBoard(r);
             for (int i = 0; i < 4; i++)
             {
                 RobotPositions[i] = new Vector2(r.Next((int)tilecount), r.Next((int)tilecount));
             }
+
+            itemorder = new List<Item>();
+            
+            for (int c = 0; c < 4; c++)
+            {
+                for (int t = 0; t < (int)ItemType.vortex; t++)
+                {
+                    itemorder.Add(new Item((ItemType)t, (RGBY)c));
+                }
+            }
+            itemorder.Add(new Item(ItemType.vortex, RGBY.red));
+            itemorder = itemorder.OrderBy(_ => r.Next()).ToList();
+
+
         }
 
-        private static Board board;
-
-        private static void MoveRobot(int x, int y)
+        protected virtual Vector2 MoveRobot(int xDir, int yDir)
         {
-            Console.WriteLine("move");
-            Vector2 dir = new Vector2(x, y);
+            Vector2 dir = new Vector2(xDir, yDir);
             Vector2 pos = RobotPositions[selectedRobot];
-            Vector2 nextpos;
-            bool br = false;
             for (int i = 0; i < tilecount; i++)
             {
-                nextpos = pos + dir;
-                if (nextpos.X < 0 || nextpos.X > tilecount - 1 || nextpos.Y < 0 || nextpos.Y > tilecount - 1)
-                    br = true;
-
-                for (int r = 0; r < RobotPositions.Length; r++)
-                {
-                    if (RobotPositions[r].Equals(nextpos))
-                        br = true;
-                    
-                }
-                foreach (Wall wall in board.walls)
-                {
-                    if (wall.position.Equals(pos))
-                    {
-                        if (wall.wallDir.X == dir.X || wall.wallDir.Y == dir.Y)
-                            br = true;
-                    }
-                    if (wall.position.Equals(nextpos))
-                    {
-                        if (wall.wallDir.X == -dir.X || wall.wallDir.Y == -dir.Y)
-                            br = true;
-                    }
-
-                }
-
-                if (br)
+                if (CanMakeMove(pos, dir))
+                    pos += dir;
+                else
                     break;
-                pos = nextpos;
             }
             RobotPositions[selectedRobot] = pos;
-            
+            return pos;
         }
-        static int h = 0;
-        public static void Draw()
+        protected virtual bool CanMakeMove(Vector2 fromPos, Vector2 dir)
+        {
+
+            Vector2 toPos = fromPos + dir;
+
+            Console.WriteLine(toPos);
+
+            if (toPos.X < 0 || toPos.X > tilecount - 1 || toPos.Y < 0 || toPos.Y > tilecount - 1)
+                return false;
+
+            for (int r = 0; r < RobotPositions.Length; r++)
+            {
+                if (RobotPositions[r].Equals(toPos))
+                    return false;
+
+            }
+            foreach (Wall wall in board.walls)
+            {
+                if (wall.position.Equals(fromPos))
+                {
+                    if (wall.wallDir.X == dir.X || wall.wallDir.Y == dir.Y)
+                        return false;
+                }
+                if (wall.position.Equals(toPos))
+                {
+                    if (wall.wallDir.X == -dir.X || wall.wallDir.Y == -dir.Y)
+                        return false;
+                }
+
+            }
+            return true;
+        }
+
+        public virtual void Draw(double delta)
         {
             DrawBoard();
-            h++;
-            h = xMath.Wrap(h, 0, 360);
             for (int i = 0; i < 4; i++)
             {
                 Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], hueShift: Renderer.hueShift((RGBY)i));
             }
+            DrawSelectionHighlight();
         }
-        public static void DrawBoard()
+        protected virtual void DrawBoard()
         {
             for (int x = 0; x < tilecount; x++)
             {
@@ -111,13 +141,51 @@ namespace RicochetRobots
             foreach (Wall wall in board.walls)
             {
                 Renderer.DrawTexture(TextureBank.Textures["wall"], wall.position, (int)wall.rotation * 90, 2f, 0);
-                if (wall.item != Item.none)
-                    Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(Item), wall.item)], wall.position, hueShift: Renderer.hueShift(wall.itemColor));
+                if (wall.item.itemType != ItemType.none)
+                    Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), wall.item.itemType)], wall.position, hueShift: Renderer.hueShift(wall.item.color));
+            }
+
+            if (itemIndex < itemorder.Count())
+                Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), itemorder[itemIndex].itemType)], new Vector2(tilecount / 2 - 0.5f), scale:2, hueShift: Renderer.hueShift(itemorder[itemIndex].color));
+        }
+        protected virtual void DrawSelectionHighlight()
+        {
+            Renderer.DrawTexture(TextureBank.Textures["colrect"], RobotPositions[selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+            Vector2 fromPos = RobotPositions[selectedRobot];
+            
+            // copied 4 times, but how to loop (0;-1),(0;1),(-1;0),(1;0)
+            while (CanMakeMove(fromPos, -Vector2.UnitX))
+            {
+                fromPos += -Vector2.UnitX;
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+            }
+            fromPos = RobotPositions[selectedRobot];
+            while (CanMakeMove(fromPos, Vector2.UnitX))
+            {
+                fromPos += Vector2.UnitX;
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+            }
+            fromPos = RobotPositions[selectedRobot];
+            while (CanMakeMove(fromPos, -Vector2.UnitY))
+            {
+                fromPos += -Vector2.UnitY;
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+            }
+            fromPos = RobotPositions[selectedRobot];
+            while (CanMakeMove(fromPos, Vector2.UnitY))
+            {
+                fromPos += Vector2.UnitY;
+                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
             }
         }
 
-        private static void KeyDown(IKeyboard arg1, Key arg2, int arg3)
+        protected virtual void KeyDown(IKeyboard arg1, Key arg2, int arg3)
         {
+            if (arg2 == Key.Backspace)
+            {
+                StartGame();
+                return;
+            }
             switch (arg2)
             {
                 case (Key.Right):

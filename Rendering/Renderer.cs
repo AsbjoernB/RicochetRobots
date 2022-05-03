@@ -9,8 +9,14 @@ namespace RicochetRobots
 {
     public static class Renderer
     {
+        // exists twice
+        public static readonly float tilecount = 16;
+        public static readonly float sidebarwidth = 8;
+        public static readonly float tilepixels = 55;
+
 
         public static GL gl { get; private set; }
+
 
         private static BufferObject<float> Vbo;
         private static BufferObject<uint> Ebo;
@@ -26,9 +32,7 @@ namespace RicochetRobots
 
         #region camera
         private static Camera camera;
-        private static float tilecount = 16;
-        private static float sidebarwidth = 8;
-        private static float tilepixels = 50;
+
         #endregion
 
         private static readonly float[] Vertices =
@@ -51,22 +55,25 @@ namespace RicochetRobots
             var options = WindowOptions.Default;
             options.Size = new Vector2D<int>((int)((tilecount + sidebarwidth) * tilepixels), (int)(tilecount * tilepixels));
             options.Title = "Ricochet Robots";
-            Program.window = Window.Create(options);
+            Master.window = Window.Create(options);
 
-            Program.window.Load += OnLoad;
-            Program.window.Render += OnRender;
-            Program.window.Closing += OnClose;
+            Master.window.Load += OnLoad;
+            Master.window.Render += OnRender;
+            Master.window.Closing += OnClose;
         }
 
         private static void OnLoad()
         {
-            IInputContext input = Program.window.CreateInput();
+
+            IInputContext input = Master.window.CreateInput();
             for (int i = 0; i < input.Keyboards.Count; i++)
             {
                 input.Keyboards[i].KeyDown += KeyDown;
             }
 
-            gl = GL.GetApi(Program.window);
+            gl = GL.GetApi(Master.window);
+
+
 
             Ebo = new BufferObject<uint>(gl, Indices, BufferTargetARB.ElementArrayBuffer);
             Vbo = new BufferObject<float>(gl, Vertices, BufferTargetARB.ArrayBuffer);
@@ -82,7 +89,7 @@ namespace RicochetRobots
             RobotTex = new Texture(gl, "Sprites/robot.png");
 
 
-            camera = new Camera(new Vector2((tilecount + sidebarwidth) / 2f - 0.5f, tilecount / 2f - 0.5f), new Vector2(tilecount + sidebarwidth, tilecount));
+            camera = new Camera(new Vector2((Master.tilecount + Master.sidebarwidth) / 2f - 0.5f, tilecount / 2f - 0.5f), new Vector2(tilecount + sidebarwidth, tilecount));
 
             //Unlike in the transformation, because of our abstraction, order doesn't matter here.
             //Translation.
@@ -95,25 +102,25 @@ namespace RicochetRobots
             TextureBank.Init(gl);
 
         }
+        
 
-        private static unsafe void OnRender(double obj)
+        private static unsafe void OnRender(double delta)
         {
             gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
             Vao.Bind();
             Shader.Use();
             Shader.SetUniform("uTexture0", 0);
-
-            Gameplay.Draw();
         }
 
-        public static unsafe void DrawTexture(Texture texture, Vector2 position, float rotation = 0f, float scale = 1f, float hueShift = 0)
+        public static unsafe void DrawTexture(Texture texture, Vector2 position, float rotation = 0f, float scale = 1f, float hueShift = 0, float alpha = 1)
         {
             texture.Bind();
 
             Shader.SetUniform("uModel", new Transform(new Vector3(position.X, position.Y, 0), rotation, scale).ViewMatrix);
             Shader.SetUniform("uCamera", camera.projectionMatrix);
             Shader.SetUniform("uHue", hueShift);
+            Shader.SetUniform("uAlpha", alpha);
 
 
             gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
@@ -121,12 +128,12 @@ namespace RicochetRobots
 
 
         private static void OnClose()
-        {
-            Vbo.Dispose();
-            Ebo.Dispose();
-            Vao.Dispose();
-            Shader.Dispose();
-            TileTex.Dispose();
+        {   
+            Vbo?.Dispose();
+            Ebo?.Dispose();
+            Vao?.Dispose();
+            Shader?.Dispose();
+            TileTex?.Dispose();
         }
 
 
@@ -134,12 +141,9 @@ namespace RicochetRobots
         {
             if (arg2 == Key.Escape)
             {
-                Program.window.Close();
+                Master.window.Close();
             }
-            if (arg2 == Key.A)
-            {
-                Console.WriteLine("A");
-            }
+
         }
 
         public static float hueShift(RGBY target)
@@ -149,11 +153,11 @@ namespace RicochetRobots
                 case RGBY.red:
                     return 0;
                 case RGBY.green:
-                    return 125f/360f;
+                    return 140f/360f;
                 case RGBY.blue:
                     return 230f/360f;
                 case RGBY.yellow:
-                    return 57f/360f;
+                    return 50f/360f;
                 default:
                     return 0;
             }

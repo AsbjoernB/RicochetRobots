@@ -29,6 +29,16 @@ namespace RicochetRobots
                 LoadSubBoards();
         }
 
+        public Item getItem(Vector2 pos)
+        {
+            foreach (Wall wall in walls)
+            {
+                if (wall.position == pos)
+                    return wall.item;
+            }
+            return new Item(ItemType.none, RGBY.red);
+        }
+
         public static Board GenerateBoard(Random r)
         {
             // TODO: always fixed seed? testing
@@ -107,13 +117,12 @@ namespace RicochetRobots
                     w.rotation = (Rotation)Enum.Parse(typeof(Rotation), values[2]);
                     if (values[3] != "none")
                     {
-                        w.item = (Item)Enum.Parse(typeof(Item), values[3]);
-                        w.itemColor = (RGBY)Enum.Parse(typeof(RGBY), values[4]);
+                        w.item = new Item((ItemType)Enum.Parse(typeof(ItemType), values[3]), (RGBY)Enum.Parse(typeof(RGBY), values[4]));
                     }
 
                     currentSubBoard.walls.Add(w);
                 }
-                Console.WriteLine("done");
+                Console.WriteLine("loading boards complete");
             }
         }
     }
