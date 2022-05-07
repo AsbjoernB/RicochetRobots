@@ -122,7 +122,7 @@ namespace RicochetRobots
             DrawBoard();
             for (int i = 0; i < 4; i++)
             {
-                Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], hueShift: Renderer.hueShift((RGBY)i));
+                Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], Renderer.colors[(RGBY)i]);
             }
             DrawSelectionHighlight();
         }
@@ -140,42 +140,43 @@ namespace RicochetRobots
             {
                 Renderer.DrawTexture(TextureBank.Textures["wall"], wall.position, (int)wall.rotation * 90, 2f, 0);
                 if (wall.item.itemType != ItemType.none)
-                    Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), wall.item.itemType)], wall.position, hueShift: Renderer.hueShift(wall.item.color));
+                    //Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), wall.item.itemType)], wall.position, hueShift: Renderer.hueShift(wall.item.color));
+                    Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), wall.item.itemType)], wall.position, wall.item.GetColor());
             }
 
             if (itemIndex < itemorder.Count())
-                Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), itemorder[itemIndex].itemType)], new Vector2(tilecount / 2 - 0.5f), scale:2, hueShift: Renderer.hueShift(itemorder[itemIndex].color));
+                Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), itemorder[itemIndex].itemType)], new Vector2(tilecount / 2 - 0.5f), itemorder[itemIndex].GetColor(), scale:2);
         }
 
         float highlightAlpha = .15f;
         protected virtual void DrawSelectionHighlight()
         {
-            Renderer.DrawTexture(TextureBank.Textures["colrect"], RobotPositions[selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
+            Renderer.DrawTexture(TextureBank.Textures["rect"], RobotPositions[selectedRobot], Renderer.colors[(RGBY)selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             Vector2 fromPos = RobotPositions[selectedRobot];
             
             // copied 4 times, but how to loop (0;-1),(0;1),(-1;0),(1;0)
             while (CanMakeMove(fromPos, -Vector2.UnitX))
             {
                 fromPos += -Vector2.UnitX;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
+                Renderer.DrawTexture(TextureBank.Textures["rect"], fromPos, Renderer.colors[(RGBY)selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, Vector2.UnitX))
             {
                 fromPos += Vector2.UnitX;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
+                Renderer.DrawTexture(TextureBank.Textures["rect"], fromPos, Renderer.colors[(RGBY)selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, -Vector2.UnitY))
             {
                 fromPos += -Vector2.UnitY;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
+                Renderer.DrawTexture(TextureBank.Textures["rect"], fromPos, Renderer.colors[(RGBY)selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
             fromPos = RobotPositions[selectedRobot];
             while (CanMakeMove(fromPos, Vector2.UnitY))
             {
                 fromPos += Vector2.UnitY;
-                Renderer.DrawTexture(TextureBank.Textures["colrect"], fromPos, 0, 1, Renderer.hueShift((RGBY)selectedRobot), 0.25f);
+                Renderer.DrawTexture(TextureBank.Textures["rect"], fromPos, Renderer.colors[(RGBY)selectedRobot], 0, 1, Renderer.hueShift((RGBY)selectedRobot), highlightAlpha);
             }
         }
 

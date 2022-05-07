@@ -2,8 +2,10 @@
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using System;
 using System.Numerics;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System;
 
 namespace RicochetRobots
 {
@@ -12,8 +14,15 @@ namespace RicochetRobots
         // exists twice
         public static readonly float tilecount = 16;
         public static readonly float sidebarwidth = 8;
-        public static readonly float tilepixels = 55;
 
+        public static readonly ReadOnlyDictionary<RGBY, Vector4> colors = new ReadOnlyDictionary<RGBY, Vector4>(new Dictionary<RGBY, Vector4>()
+        {
+            {RGBY.red, new Vector4(1,0,0,1) },
+            {RGBY.green, new Vector4(0,0.9f,0,1)},
+            {RGBY.blue, new Vector4(0.5f,0.5f,1,1)},
+            {RGBY.yellow, new Vector4(1f,1f,0.1f,1)}
+
+        });
 
         public static GL gl { get; private set; }
 
@@ -53,18 +62,26 @@ namespace RicochetRobots
         public static void Init()
         {
             var options = WindowOptions.Default;
-            options.Size = new Vector2D<int>((int)((tilecount + sidebarwidth) * tilepixels), (int)(tilecount * tilepixels));
+            options.Size = new Vector2D<int>(1280, 720);
+            //options.Size = new Vector2D<int>((int)((tilecount + sidebarwidth) * tilepixels), (int)(tilecount * tilepixels));
             options.Title = "Ricochet Robots";
             Master.window = Window.Create(options);
 
             Master.window.Load += OnLoad;
             Master.window.Render += OnRender;
             Master.window.Closing += OnClose;
+            Master.window.Resize += OnResize;
+        }
+
+        private static void OnResize(Vector2D<int> dimensions)
+        {
+            gl.Viewport(dimensions);
+            Vector2 size = new Vector2(((float)Master.window.Size.X / (float)Master.window.Size.Y) * tilecount, tilecount);
+            camera = new Camera((size / 2) - new Vector2(0.5f), size);
         }
 
         private static void OnLoad()
         {
-
             IInputContext input = Master.window.CreateInput();
             for (int i = 0; i < input.Keyboards.Count; i++)
             {
@@ -89,12 +106,12 @@ namespace RicochetRobots
             RobotTex = new Texture(gl, "Sprites/robot.png");
 
 
-            camera = new Camera(new Vector2((Master.tilecount + Master.sidebarwidth) / 2f - 0.5f, tilecount / 2f - 0.5f), new Vector2(tilecount + sidebarwidth, tilecount));
-
-            //Unlike in the transformation, because of our abstraction, order doesn't matter here.
-            //Translation.
-            Transforms[0] = new Transform();
-            Transforms[0].Position = new Vector3(0f, 0f, 0f);
+            Vector2 size = new Vector2(((float)Master.window.Size.X / (float)Master.window.Size.Y) * tilecount, tilecount);
+            camera = new Camera((size / 2) - new Vector2(0.5f), size);
+            //Vector2 size = new Vector2(16f / 9f * tilecount, tilecount);
+            //Vector2 size = new Vector2(5);
+            //camera = new Camera((size / 2) - new Vector2(0.5f), size);
+            //camera = new Camera(new Vector2((Master.tilecount + Master.sidebarwidth) / 2f - 0.5f, tilecount / 2f - 0.5f), new Vector2(tilecount + sidebarwidth, tilecount));
 
             gl.Enable(EnableCap.Blend);
             gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -102,7 +119,7 @@ namespace RicochetRobots
             TextureBank.Init(gl);
 
         }
-        
+
 
         private static unsafe void OnRender(double delta)
         {
@@ -119,8 +136,22 @@ namespace RicochetRobots
 
             Shader.SetUniform("uModel", new Transform(new Vector3(position.X, position.Y, 0), rotation, scale).ViewMatrix);
             Shader.SetUniform("uCamera", camera.projectionMatrix);
-            Shader.SetUniform("uHue", hueShift);
+            //Shader.SetUniform("uHue", hueShift);
             Shader.SetUniform("uAlpha", alpha);
+            Shader.SetUniform("uTint", new Vector4(1f, 1f, 1f, 1f));
+
+
+            gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);
+        }
+        public static unsafe void DrawTexture(Texture texture, Vector2 position, Vector4 tint, float rotation = 0f, float scale = 1f, float hueShift = 0, float alpha = 1)
+        {
+            texture.Bind();
+
+            Shader.SetUniform("uModel", new Transform(new Vector3(position.X, position.Y, 0), rotation, scale).ViewMatrix);
+            Shader.SetUniform("uCamera", camera.projectionMatrix);
+            //Shader.SetUniform("uHue", hueShift);
+            Shader.SetUniform("uAlpha", alpha);
+            Shader.SetUniform("uTint", tint);
 
 
             gl.DrawElements(PrimitiveType.Triangles, (uint)Indices.Length, DrawElementsType.UnsignedInt, null);

@@ -31,10 +31,9 @@ namespace RicochetRobots
 
             imgui = new ImGuiController(Renderer.gl, Master.window, input);
 
-            ImGuiNET.ImGui.Begin("Ricochet Robots", ImGuiNET.ImGuiWindowFlags.NoTitleBar | ImGuiNET.ImGuiWindowFlags.NoMove);
-            ImGuiNET.ImGui.SetWindowFontScale(1);
-            ImGuiNET.ImGui.SetWindowPos(new Vector2(Master.tilepixels * tilecount, 0));
-            ImGuiNET.ImGui.SetWindowSize(new Vector2(Master.sidebarwidth * Master.tilepixels, Master.tilepixels * tilecount));
+
+
+
 
         }
 
@@ -58,7 +57,11 @@ namespace RicochetRobots
 
             imgui.Update((float)delta);
 
-            ImGuiNET.ImGui.Begin("Ricochet Robots", ImGuiNET.ImGuiWindowFlags.NoTitleBar | ImGuiNET.ImGuiWindowFlags.NoMove);
+            ImGuiNET.ImGui.Begin("Livesplit", ImGuiNET.ImGuiWindowFlags.NoTitleBar | ImGuiNET.ImGuiWindowFlags.NoMove);
+
+            ImGuiNET.ImGui.SetWindowFontScale(1);
+            ImGuiNET.ImGui.SetWindowPos(new Vector2(Master.window.Size.Y, 0));
+            ImGuiNET.ImGui.SetWindowSize(new Vector2((Master.window.Size.X - Master.window.Size.Y)/2f, Master.window.Size.Y));
 
             //ImGuiNET.ImGui.ShowDemoWindow();
 
@@ -93,6 +96,8 @@ namespace RicochetRobots
             }
 
             ImGuiNET.ImGui.EndTable();
+
+            ImGuiNET.ImGui.End();
 
             imgui.Render();
         }

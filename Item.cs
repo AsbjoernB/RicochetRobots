@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace RicochetRobots
 {
@@ -29,6 +24,13 @@ namespace RicochetRobots
         public override string ToString()
         {
             return $"({itemType}, {color})";
+        }
+
+        public Vector4 GetColor()
+        {
+            if (itemType == ItemType.vortex)
+                return new Vector4(1, 1, 1, 1);
+            return Renderer.colors[color];
         }
     }
 
