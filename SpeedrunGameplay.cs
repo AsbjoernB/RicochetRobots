@@ -31,10 +31,6 @@ namespace RicochetRobots
 
             imgui = new ImGuiController(Renderer.gl, Master.window, input);
 
-
-
-
-
         }
 
         protected override void StartGame()
@@ -42,6 +38,8 @@ namespace RicochetRobots
             base.StartGame();
 
             moveCount = 0;
+
+            itemPickupTime = 0;
 
             splits = new List<TimeSpan>();
 

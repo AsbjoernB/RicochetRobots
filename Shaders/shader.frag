@@ -39,11 +39,31 @@ vec4 PureTint(in vec4 c, in vec4 tint)
     return (c * tint);
 }
 
+vec4 biLinearTex2D(in vec2 fragCoord)
+{
+	vec2 uv = fUv;	
+	vec2 res = vec2(200.0);
+    vec2 st = uv * res - 0.5;
+
+    vec2 iuv = floor( st );
+    vec2 fuv = fract( st );
+
+    vec4 a = texture( uTexture0, (iuv+vec2(0.5,0.5))/res );
+    vec4 b = texture( uTexture0, (iuv+vec2(1.5,0.5))/res );
+    vec4 c = texture( uTexture0, (iuv+vec2(0.5,1.5))/res );
+    vec4 d = texture( uTexture0, (iuv+vec2(1.5,1.5))/res );
+
+    return mix(
+        mix( a, b, fuv.x),
+        mix( c, d, fuv.x), fuv.y
+    );
+    
+}
+
 void main()
 {
-    //vec4 col = HueShift(texture(uTexture0, fUv),uHue);
-    //FragColor = vec4(col.r, col.g, col.b, col.a * uAlpha);
-    vec4 col = PureTint(texture(uTexture0, fUv), uTint);
+    //vec4 col = PureTint(texture(uTexture0, fUv), uTint);
+    vec4 col = PureTint(biLinearTex2D(fUv), uTint);
     FragColor = vec4(col.r, col.g, col.b, col.a * uAlpha);
         
 }

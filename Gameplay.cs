@@ -54,7 +54,22 @@ namespace RicochetRobots
             board = Board.GenerateBoard(r);
             for (int i = 0; i < 4; i++)
             {
-                RobotPositions[i] = new Vector2(r.Next((int)tilecount), r.Next((int)tilecount));
+                bool illegalPlacement;
+                do
+                {
+                    illegalPlacement = false;
+                    RobotPositions[i] = new Vector2(r.Next((int)tilecount), r.Next((int)tilecount));
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (RobotPositions[i] == RobotPositions[j])
+                            illegalPlacement = true;
+                    }
+                    if (RobotPositions[i].X >= 7 && RobotPositions[i].X <= 9 && RobotPositions[i].Y >= 7 && RobotPositions[i].Y <= 9)
+                        illegalPlacement = true;
+
+                }
+                while (illegalPlacement);
+                
             }
 
             itemorder = new List<Item>();
@@ -120,14 +135,17 @@ namespace RicochetRobots
         public virtual void Draw(double delta)
         {
             DrawBoard();
+
             for (int i = 0; i < 4; i++)
             {
                 Renderer.DrawTexture(TextureBank.Textures["robot"], RobotPositions[i], Renderer.colors[(RGBY)i]);
             }
+
             DrawSelectionHighlight();
         }
         protected virtual void DrawBoard()
         {
+            // tiles
             for (int x = 0; x < tilecount; x++)
             {
                 for (int y = 0; y < tilecount; y++)
@@ -136,6 +154,10 @@ namespace RicochetRobots
                 }
             }
 
+            // square in middle
+            Renderer.DrawTexture(TextureBank.Textures["rect"], new Vector2(tilecount / 2 - 0.5f), new Vector4(0.5f,0.5f,0.5f,1f), scale: 2);
+
+            // walls and items
             foreach (Wall wall in board.walls)
             {
                 Renderer.DrawTexture(TextureBank.Textures["wall"], wall.position, (int)wall.rotation * 90, 2f, 0);
@@ -144,6 +166,7 @@ namespace RicochetRobots
                     Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), wall.item.itemType)], wall.position, wall.item.GetColor());
             }
 
+            // center item
             if (itemIndex < itemorder.Count())
                 Renderer.DrawTexture(TextureBank.Textures[Enum.GetName(typeof(ItemType), itemorder[itemIndex].itemType)], new Vector2(tilecount / 2 - 0.5f), itemorder[itemIndex].GetColor(), scale:2);
         }

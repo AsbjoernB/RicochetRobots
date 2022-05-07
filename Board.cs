@@ -41,6 +41,7 @@ namespace RicochetRobots
 
         public static Board GenerateBoard(Random r)
         {
+            LoadSubBoards();
             // TODO: always fixed seed? testing
             if (r == null)
                 r = new Random();
@@ -53,7 +54,7 @@ namespace RicochetRobots
                 // pick random board from each color and add to array
                 int index = r.Next(subBoards[(RGBY)i].Count);
                 sb.Add(subBoards[(RGBY)i][index]);
-                Console.WriteLine((RGBY)i);
+                Console.WriteLine((RGBY)i + ": " + index);
             }
 
             var shuffled = sb.OrderBy(b => r.Next()).ToList();
@@ -87,6 +88,8 @@ namespace RicochetRobots
             RGBY currentHeader = RGBY.red;
             Board currentSubBoard = new Board();
 
+            foreach (List<Board> bl in subBoards.Values)
+                bl.Clear();
 
             using (var reader = new StreamReader("Boards.txt"))
             {
