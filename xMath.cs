@@ -23,5 +23,24 @@ namespace RicochetRobots
                 value = min + (value - max - 1);
             return value;
         }
+
+        public static bool isInMandelbrot(float x, float y)
+        {
+            x = ((x-8) / 2048) + 0.26f;
+            y = ((y-8) / 2048);
+
+            float re = x;
+            float im = y;
+
+            Console.WriteLine(re + ", " + im);
+            for (int iterCount = 0; iterCount < 1000; iterCount++)
+            {
+                float newRe = re * re - im * im;
+                float newIm = 2 * re * im;
+                re = newRe + x;
+                im = newIm + y;
+            }
+            return (re * re + im * im > 0.001);
+        }
     }
 }

@@ -17,10 +17,10 @@ namespace RicochetRobots
 
         public static readonly ReadOnlyDictionary<RGBY, Vector4> colors = new ReadOnlyDictionary<RGBY, Vector4>(new Dictionary<RGBY, Vector4>()
         {
-            {RGBY.red, new Vector4(1,0,0,1) },
+            {RGBY.red, new Vector4(0.9f,0,0,1) },
             {RGBY.green, new Vector4(0,0.9f,0,1)},
             {RGBY.blue, new Vector4(0.5f,0.5f,1,1)},
-            {RGBY.yellow, new Vector4(1f,1f,0.1f,1)}
+            {RGBY.yellow, new Vector4(1f,1f,0.2f,1)}
 
         });
 

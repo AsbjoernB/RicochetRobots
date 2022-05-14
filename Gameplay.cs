@@ -150,7 +150,12 @@ namespace RicochetRobots
             {
                 for (int y = 0; y < tilecount; y++)
                 {
-                    Renderer.DrawTexture(TextureBank.Textures["tile"], new Vector2(x, y));
+                    if ((x+y) % 2 == 0)
+                    //if (xMath.isInMandelbrot(x,y))
+                    //if ((x/2 + y/2) % 2== 0)
+                        Renderer.DrawTexture(TextureBank.Textures["tile"], new Vector2(x, y), new Vector4(0.95f,0.95f,0.95f,1f));
+                    else
+                        Renderer.DrawTexture(TextureBank.Textures["tile"], new Vector2(x, y));
                 }
             }
 

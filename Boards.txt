@@ -74,7 +74,7 @@ end
 0,0,UR,none
 end
 [yellow]
-5,0,DL,vortex,red
+0,4,DL,vortex,red
 1,2,DR,moon,blue
 3,1,UR,sun,yellow
 4,6,UL,planet,green
@@ -83,7 +83,7 @@ end
 7,2,UR,none
 0,0,UR,none
 end
-0,2,DL,vortex,red
+2,0,DL,vortex,red
 2,5,DL,star,red
 3,2,UR,planet,green
 6,1,UL,moon,blue
@@ -92,12 +92,11 @@ end
 7,3,UR,none
 0,0,UR,none
 end
-0,5,DL,vortex,red
+5,0,DL,vortex,red
 2,1,UR,planet,green
-1,6,DL,sun,yellow
-3,4,DR,star,red
+1,6,DR,sun,yellow
+3,4,DL,star,red
 6,2,UL,moon,blue
 3,7,UR,none
 7,4,UR,none
-0,0,UR,none
 end
