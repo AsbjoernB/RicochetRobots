@@ -30,9 +30,7 @@ namespace RicochetRobots
         private static BufferObject<float> Vbo;
         private static BufferObject<uint> Ebo;
         private static VertexArrayObject<float, uint> Vao;
-        private static Texture TileTex;
-        private static Texture WallTex;
-        private static Texture RobotTex;
+
         private static Shader Shader;
         //Creating transforms for the transformations
         private static Transform[] Transforms = new Transform[1];
@@ -101,10 +99,6 @@ namespace RicochetRobots
 
             Shader = new Shader(gl, "Shaders/shader.vert", "Shaders/shader.frag");
 
-            TileTex = new Texture(gl, "Sprites/tile.png");
-            WallTex = new Texture(gl, "Sprites/wall.png");
-            RobotTex = new Texture(gl, "Sprites/robot.png");
-
 
             Vector2 size = new Vector2(((float)Master.window.Size.X / (float)Master.window.Size.Y) * tilecount, tilecount);
             camera = new Camera((size / 2) - new Vector2(0.5f), size);
@@ -164,7 +158,6 @@ namespace RicochetRobots
             Ebo?.Dispose();
             Vao?.Dispose();
             Shader?.Dispose();
-            TileTex?.Dispose();
         }
 
 
